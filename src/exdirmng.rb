@@ -1,3 +1,4 @@
+#!/Users/reo/.rbenv/shims/ruby
 $:.unshift File.dirname(__FILE__)
 require 'Directory.rb'
 require 'DirRepository.rb'
@@ -6,8 +7,9 @@ require 'CommandParser.rb'
 require 'json'
 class Main
     def initialize
-        p=__FILE__.split("/")
-        json_path =p[0]+'/data.json'
+        pa=__FILE__.split("/")
+        pa.pop
+        json_path =pa.join("/")+'/data.json'
         json_data=open(json_path) do |io|
             JSON.load(io)
         end
@@ -57,12 +59,34 @@ class Main
                 puts '私が作成したフォルダ以外の面倒なんて見きれないわ！'
             end
             Dir.chdir(cwd)
+        elsif command.type == 'list' then
+            puts '今まで私が作成したフォルダ一覧だよ！'
+            puts '言わずもがなだけど、削除する際にはdelete命令で削除してね！'
+            json_data.keys.map{|n| puts n}
+        elsif command.type == 'delete' then
+            if json_data.has_key?(command.dir_name) then
+                puts '本当に削除していいの？？？(y/n)'
+                temp= STDIN.gets
+                temp.chomp!
+                if temp == 'y' then
+                    # 削除
+                    json_data[command.dir_name].map{|n| Dir.delete(command.dir_name+"/"+n)} 
+                    Dir.delete(command.dir_name)
+                    json_data.delete(command.dir_name)
+                    puts '削除完了！'
+                else 
+                    puts '消しませんでしたよ！'
+                end
+            else
+                puts 'そんなディレクトリ管理してませんっ！'
+            end
         else
             puts 'err!'
             puts 'そんな命令知らないっ！'
-            puts ' generate'
-            puts ' submit'
+            puts ' generate [親ディレクトリ名] -h [ヘッダ文字] -f [何桁表示か] -m [子ディレクトリの個数]'
+            puts ' submit [ディレクトリ名]'
             puts ' list'
+            puts ' delete [ディレクトリ名]'
             puts 'のうちどれか選んでね！'
         end
         # json 書き込み

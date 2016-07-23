@@ -43,6 +43,15 @@ class CommandParser
             dir_name= argv[1]
             command= Command.new(type, dir_name, 0, 0, 0)
             return command;
+        elsif argv[0]== 'list' then
+            type= argv[0]
+            command = Command.new(type,0,0,0,0)
+            return command
+        elsif argv[0]== 'delete' then
+            type= argv[0]
+            dir_name= argv[1]
+            command = Command.new(type,dir_name,0,0,0)
+            return command
         else 
             command = Command.new('undefined',0,0,0,0)
             return command
