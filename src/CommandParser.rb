@@ -42,7 +42,7 @@ class CommandParser
             type= argv[0]
             dir_name= argv[1]
             command= Command.new(type, dir_name, 0, 0, 0)
-            return 0;
+            return command;
         else 
             command = Command.new('undefined',0,0,0,0)
             return command

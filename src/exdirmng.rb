@@ -4,13 +4,13 @@ require 'DirRepository.rb'
 require 'Command.rb'
 require 'CommandParser.rb'
 require 'json'
-p=__FILE__.split("/")
-json_path =p[0]+'/data.json'
-json_data=open(json_path) do |io|
-    JSON.load(io)
-end
 class Main
-    def initialize(json_data, json_path )
+    def initialize
+        p=__FILE__.split("/")
+        json_path =p[0]+'/data.json'
+        json_data=open(json_path) do |io|
+            JSON.load(io)
+        end
         @json_data = json_data
         @json_path = json_path
         commandparser= CommandParser.new(ARGV)
@@ -36,10 +36,18 @@ class Main
                 json_data[command.dir_name][n]= command.header+str
             }
         elsif command.type == 'submit' then
-            if json_data.has_key? then
+            cwd= Dir.pwd
+            if json_data.has_key?(command.dir_name) then
                 puts '提出状況だよっ！'
-                json_data[command.dir_name]{|n|
-                    
+                json_data[command.dir_name].map{ |n|
+                    Dir.chdir(cwd)
+                    Dir.chdir(command.dir_name + '/' + n)
+                    if Dir.glob("*").length == 0 then 
+                        j= 'x'
+                    else
+                        j= 'o'
+                    end
+                    puts "["+j+"]"+n
                 }
                 puts 'でも、実際は提出コマンド打って提出したのかどうかわからないから、ファイルが存在しているディレクトリはすぐに提出しようね！'
                 puts 'あれ、、、提出コマンド知らない...？'
@@ -48,7 +56,8 @@ class Main
                 puts 'そんなフォルダ作ってないよ！'
                 puts '私が作成したフォルダ以外の面倒なんて見きれないわ！'
             end
-        elsif command.type == 'undefined' then
+            Dir.chdir(cwd)
+        else
             puts 'err!'
             puts 'そんな命令知らないっ！'
             puts ' generate'
@@ -63,5 +72,5 @@ class Main
     end
 end
 
-Main.new(json_data,json_path)
+Main.new
 
