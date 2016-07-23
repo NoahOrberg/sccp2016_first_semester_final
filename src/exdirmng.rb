@@ -12,7 +12,6 @@ class Main
             # 親ディレクトリの作成
             repo_dir= DirRepository.new(command.dir_name)
             repo_dir.make
-            command.header= command.dir_name + "/" + command.header 
             # 子ディレクトリの生成
             num= (1..command.max).to_a
             num.map{ |n|
@@ -23,7 +22,7 @@ class Main
                     else break
                     end
                 end
-                Dir.mkdir(command.header+n, 0707)
+                Dir.mkdir(command.dir_name + "/" + command.header + n, 0707)
             }
             #
         end
