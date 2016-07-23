@@ -1,8 +1,8 @@
-
-require './Directory.rb'
-require './DirRepository.rb'
-require './Command.rb'
-require './CommandParser.rb'
+$:.unshift File.dirname(__FILE__)
+require 'Directory.rb'
+require 'DirRepository.rb'
+require 'Command.rb'
+require 'CommandParser.rb'
 
 class Main
     def initialize
