@@ -14,17 +14,18 @@ class Main
             repo_dir.make
             # 子ディレクトリの生成
             num= (1..command.max).to_a
+            dir= Array.new(command.max)
             num.map{ |n|
-                n= n.to_s
+                str= n.to_s
                 while true do
-                    if n.length <command.format then
-                        n= "0"+n
+                    if str.length <command.format then
+                        str= "0"+str
                     else break
                     end
                 end
-                Dir.mkdir(command.dir_name + "/" + command.header + n, 0707)
+                dir[n]= Directory.new(command.dir_name + "/" + command.header + str)
+                dir[n].make
             }
-            #
         end
     end
 end
